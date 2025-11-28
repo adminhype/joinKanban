@@ -12,12 +12,12 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideFirebaseApp(() =>
       initializeApp({
-        projectId: 'join-80a7b',
-        appId: '1:789977677975:web:ec6096e9bd795ea0b029d2',
-        storageBucket: 'join-80a7b.firebasestorage.app',
-        apiKey: 'AIzaSyB46EgjrM_9F696WOt0EgUo9116ZWhHFPs',
-        authDomain: 'join-80a7b.firebaseapp.com',
-        messagingSenderId: '789977677975',
+        projectId: 'placeholder',
+        appId: 'placeholder',
+        storageBucket: 'placeholder.appspot.com',
+        apiKey: 'placeholder',
+        authDomain: 'placeholder.firebaseapp.com',
+        messagingSenderId: 'placeholder',
       })
     ),
     provideAuth(() => getAuth()),
