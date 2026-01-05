@@ -1,7 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FirebaseService } from '../../services/firebase.service';
+import { Subscription } from 'rxjs';
+import { authState } from '@angular/fire/auth';
+import { ContactInterface } from '../../interfaces/contact.interface';
 
 @Component({
   selector: 'app-header',
@@ -9,26 +12,34 @@ import { FirebaseService } from '../../services/firebase.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnInit {
-  showOverlay = false;
-  initials: string = '';
+export class HeaderComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private firebaseService = inject(FirebaseService);
+  private userSubscription: Subscription | null = null;
+  
+  showOverlay = false;
+  initials: string = '';
 
   ngOnInit() {
-    const email = this.authService.loggedInUsername();
-
-    if (email) {
-      const contact = this.firebaseService.contactList
-        .find(c => c.email.toLowerCase() === email.toLowerCase());
-
-      let displayName = email;
-      if (contact && contact.name) {
-        displayName = contact.name;
+    this.userSubscription = authState(this.authService.firebaseAuth).subscribe(user => {
+      if (user && user.email) {
+        this.firebaseService.contactList$.subscribe((contacts) => {
+          this.updateInitials(user.email!, contacts);
+        });
+      }else{
+        this.initials = '';
       }
+    });
+  }
 
-      this.initials = this.extractInitials(displayName);
+  updateInitials(email: string, contacts: ContactInterface[]) {
+    const contact = contacts.find(c => c.email.toLowerCase() === email.toLowerCase());
+
+    let displayName = email;
+    if (contact && contact.name){
+      displayName = contact.name;
     }
+    this.initials = this.extractInitials(displayName);
   }
 
   private extractInitials(name: string): string {
@@ -46,5 +57,11 @@ export class HeaderComponent implements OnInit {
 
   toggleOverlay() {
     this.showOverlay = !this.showOverlay;
+  }
+
+  ngOnDestroy(){
+    if(this.userSubscription){
+      this.userSubscription.unsubscribe();
+    }
   }
 }

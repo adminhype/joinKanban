@@ -27,6 +27,9 @@ export class FirebaseService implements OnDestroy {
   private taskListSubject = new BehaviorSubject<TaskInterface[]>([]);
   taskList$: Observable<TaskInterface[]> = this.taskListSubject.asObservable();
 
+  private contactListSubject = new BehaviorSubject<ContactInterface[]>([]);
+  contactList$: Observable<ContactInterface[]> = this.contactListSubject.asObservable();
+
   constructor() {
   }
 
@@ -43,6 +46,7 @@ export class FirebaseService implements OnDestroy {
           );
         });
         this.contactList.sort((a, b) => a.name.localeCompare(b.name));
+        this.contactListSubject.next([...this.contactList]);
       },
       (error) => {
         console.error('Error fetching contacts:', error);
@@ -73,6 +77,7 @@ export class FirebaseService implements OnDestroy {
     this.contactList = [];
     this.taskList = [];
     this.taskListSubject.next([]);
+    this.contactListSubject.next([]);
   }
   
   ngOnDestroy() {
