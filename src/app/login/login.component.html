@@ -26,15 +26,15 @@
                 <div class="input-group">
                     <input type="email" placeholder="Email" [(ngModel)]="email" name="email" autocomplete="email">
                     <span class="icon">
-                        <img src="./assets/icons/mail.png" alt="">
+                        <img src="./assets/icons/mail.png" alt="email icon">
                     </span>
                 </div>
 
                 <div class="input-group">
                     <input [type]="showPassword ? 'text' : 'password'" placeholder="Password" [(ngModel)]="password"
                         name="password" autocomplete="current-password">
-                    <span class="icon" (click)="togglePasswordVisibility()" style="cursor:pointer">
-                        <img [src]="showPassword ? './assets/icons/unlock.png' : './assets/icons/lock.png'"
+                    <span class="icon" (click)="togglePasswordVisibility()">
+                        <img [src]="getPasswordIcon()"
                             alt="toggle password visibility">
                     </span>
                 </div>

@@ -24,6 +24,16 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
+  getPasswordIcon():string{
+    if(this.password.length === 0){
+      return './assets/icons/lock.png';
+    }
+    if(this.showPassword){
+      return './assets/icons/visibility.png';
+  }
+  return './assets/icons/visibility_off.png';
+  }
+
   onLogin(): void {
     this.errorMessage = '';
     if (!this.email || !this.password) {
